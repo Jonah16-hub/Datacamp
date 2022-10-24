@@ -30,7 +30,7 @@ pip install sklearn
 ```
 ## Usage
 
-You have 2 types of analysis :
+You have 2 types of analysis:
 - Google News
 - Twitter 
 
