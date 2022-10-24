@@ -261,7 +261,9 @@ def main():
 
     #Google news data
     elif page == "On news paper (from Google News)":
-        pass
+        data_url = "data/gn.json"
+        lb.st.write("")
+
 
 
 main()

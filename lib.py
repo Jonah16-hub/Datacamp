@@ -20,6 +20,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.stem import PorterStemmer
 from nltk.stem.snowball import SnowballStemmer
 from nltk import FreqDist
+import nltk.collocations as collocation
 
 
 #expression
