@@ -1,14 +1,19 @@
 import lib as lb
 import methods as mt
+import GoogleNews_getdata as gnd
 
 
  
 def main():
-    lb.st.title("PFIZER DIGITAL FOOTPRINT EVALUATION")
+    lb.st.image("assets/company.png")
+    lb.st.title("EVALUATION OF DIGITAL FOOTPRINT")
     lb.st.info("Welcome")
-    lb.st.write("The purpose of the project is to measure the digital impact of PFIZER on internet for that we gather informations from differents sources")
+    lb.st.write("The purpose of the project is to measure the digital impact of PFIZER on internet.To do that we gathered informations from differents sources accross the web")
+    lb.st.write("Pfizer is a pharmaceutical company which has a diversified portfolio in biotech and medication products")
+    
+    lb.st.sidebar.image("assets/logo.png")
     lb.st.sidebar.title('*SELECT THE SOURCES*')
-    lb.st.sidebar.header('Differents places where we evaluate the digital impact of the company Pfizer')
+    lb.st.sidebar.header('Differents places where we have take data to evaluate the digital presence of the company Pfizer')
     
     #select box
     page = lb.st.sidebar.selectbox(
@@ -30,21 +35,42 @@ def main():
         
         data_url = 'tt.json'
         tt = mt.loader(data_url)
-        lb.st.write("Let's take a look to our data scrapped data from twitter")
+        lb.st.write("Let's take a look to our data, scrapped from twitter")
         tt = tt[['date','content','hashtags','lang']]
         tt.date =  lb.pd.to_datetime(tt['date'], format='%d%b%Y:%H:%M:%S.%f')
+        #EDA
         with lb.st.container():
-            lb.st.subheader("EDA")
+            lb.st.subheader("Exploratory Data Analysis")
             lb.st.write(tt)
-            lb.st.write("we took ",tt.shape[0]," random tweets from Sunday ",tt.date[999], " to ",tt.date[0] ,", in differents languages . We kept the users anonym for confidentiality.")
-            lb.st.write("the languages are distributed as follows :")
-            mt.display_countplot(tt.lang , "Tweet's language repartition")
+            lb.st.write("we took ",tt.shape[0]," random tweets from Sunday ",tt.date[999], " to ",tt.date[0] ,", in differents languages . We didnt keep the users ID , so everything is anonymize for confidentiality.")
+            lb.st.write("The languages are distributed as follows :")
+
+            en = len(tt[tt.lang == "en"])
+            fr = len(tt[tt.lang == "fr"])
+            it = len(tt[tt.lang == "it"])
+            es = len(tt[tt.lang == "es"])
+            qht = len(tt[tt.lang == "qht"])
+            qme = len(tt[tt.lang == "qme"])
+            de = len(tt[tt.lang == "de"])
+            nl = len(tt[tt.lang == "nl"])
+            others = 1000 - (en+fr+it+es+qht+qme+de+nl)
+            lang = [en,fr,it,es,qht+qme,de,nl,others]
+            names = ["english","french","italian","spanish","arabic languages","german","deutch","others"]
+
+            # lb.st.write(en)
+            fig ,ax = lb.plt.subplots(figsize=(2,2))
+            lb.plt.pie(lang , labels=names,radius=1.75,autopct = '%0.1f%%')
+            lb.plt.suptitle('Tweets languages distribution',x = 0.55 , y = 1.15, color = "blue")
+            lb.st.pyplot(fig)
+
+            lb.st.write("This distribution is important for the next steps of our analysis. In fact , we are going to analyse text and find out what is hidden between the lines of each tweets")
+            # mt.display_countplot(tt.lang , "Tweet's language repartition")    
             hastags = []
             for hash in tt.hashtags:
                 for tags in hash :
                     hastags.append(tags)
 
-            lb.st.write("50 Most Common Hastags in our tweets")
+            lb.st.write("Here are the most common Hastags in our tweets")
 
             fig , ax = lb.plt.subplots(figsize = (8, 8), facecolor = None)
             wordcloud = lb.WordCloud(width = 800, height = 800,
@@ -61,8 +87,8 @@ def main():
         lb.st.write("Now we will start the text processing phase")
         
         with lb.st.container():
-            lb.st.subheader("Tokenization(How can transform tweets into words or text format?)")
-            lb.st.write("Now we gonna start Transfering strings into a single textual token And then we gonna apply textual filter depending on the most frequent languages to remove stopwords and punctuation to start our evaluation")
+            lb.st.subheader("Tokenization(How wetransformed tweets into words and text format)")
+            lb.st.write("Now we gonna start Transfering strings into single textual tokens and then we are going to apply textual filter depending on the most frequent languages to remove stopwords and punctuations to start our evaluation")
             
             words_dico = dict()
             expr = lb.re.compile("\W+",lb.re.U)
@@ -261,9 +287,55 @@ def main():
 
     #Google news data
     elif page == "On news paper (from Google News)":
-        data_url = "data/gn.json"
-        lb.st.write("")
+        data_url = "gn.json"
+        lb.st.write("We have created a bot to scrap title of news paper from Google News")
+        
+
+        if lb.st.button("Get headlines"):
+            gnd.main()
+            gn = mt.loader(data_url)
+            lb.st.write("Here are 100 Current headlines about Pfizer")
+            lb.st.write(gn.head(100))
+
+            lb.st.write("wordcloud related to those news")
+            #cleaning the headlines
+            stop_words = set(lb.stopwords.words('english'))
+            lb.string.punctuation = lb.string.punctuation +'"'+'"'+'-'+'''+'''+'—'
+
+            words = []
+            for title in gn.title :
+                for word in mt.custom_split(lb.string.punctuation,title):
+                    # for w in word.split():
+                        words.append(word)
+
+            removal_list = list(stop_words) + list(lb.string.punctuation)
+            words = mt.remove_stopwords(words,removal_list)
+
+            fig, ax = lb.plt.subplots(figsize = (8, 8))
+            wordcloud = lb.WordCloud(width = 800, height = 800,
+                background_color ='white',
+                min_font_size = 10).generate(str(words))
+ 
+            # plot the WordCloud image                      
+            # lb.plt.figure(, facecolor = None)
+            lb.plt.imshow(wordcloud)
+            lb.plt.axis("off")
+            lb.plt.tight_layout(pad = 0)
+            lb.st.pyplot(fig)
+            # mt.display_wordcloud(str(words),removal_list,"Headlines")
+        else :  
+            pass
 
 
 
+lb.st.set_page_config(
+    page_title="Digital Footprinters",
+    page_icon="🐾",
+    layout="centered",
+    initial_sidebar_state="expanded",
+    menu_items={
+        # 'Get Help': 'https://www.linkedin.com/in/ars%C3%A8ne-bakandakan/',
+        'About': "# cool app! Made with 💖"
+    }
+)
 main()

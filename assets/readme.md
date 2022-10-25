@@ -34,11 +34,12 @@ You have 2 types of analysis :
 - Google News
 - Twitter 
 
-##Credit
+## Credit
 
-[Guru99](https://www.guru99.com/pos-tagging-chunking-nltk.html)
-[Datacamp.com](https://www.datacamp.com/tutorial/stemming-lemmatization-python)
-[GeeksForGeek](https://www.geeksforgeeks.org/text-mining-in-data-mining/?ref=gcse)
-[GeeksForGeek](https://www.geeksforgeeks.org/what-is-sentiment-analysis/)
-[GeeksForGeek](https://www.geeksforgeeks.org/python-sentiment-analysis-using-vader/)
-[Towardsdatascience](https://towardsdatascience.com/my-absolute-go-to-for-sentiment-analysis-textblob-3ac3a11d524)
+- [Guru99](https://www.guru99.com/pos-tagging-chunking-nltk.html)  
+- [Datacamp.com](https://www.datacamp.com/tutorial/stemming-lemmatization-python)  
+- [GeeksForGeek](https://www.geeksforgeeks.org/text-mining-in-data-mining/?ref=gcse)  
+- [GeeksForGeek](https://www.geeksforgeeks.org/what-is-sentiment-analysis/)  
+- [GeeksForGeek](https://www.geeksforgeeks.org/python-sentiment-analysis-using-vader/)  
+- [Towardsdatascience](https://towardsdatascience.com/my-absolute-go-to-for-sentiment-analysis-textblob-3ac3a11d524)  
+- [Pfizer](https://www.pfizer.fr/qui-sommes-nous)  

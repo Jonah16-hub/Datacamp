@@ -31,7 +31,7 @@ def display_barplot(X ,Y , title):
     # lb.plt.bar(X , Y)
     lb.sns.barplot(x=X, y=Y, orient='h', ax=ax)
     lb.plt.title(title)
-    # lb.plt.xticks(    );
+    lb.plt.xticks([]);
     lb.st.pyplot(fig)
 
 # a function which display a progress bar while loading the data
@@ -52,11 +52,19 @@ def custom_split(sep_list ,  to_split):
     regular_exp = '|'.join(map(lb.re.escape, sep_list))
     return lb.re.split(regular_exp, to_split)
 
+def remove_stopwords(word_list,removal_list):     
+    y = []
+    for word in word_list:
+        if word in removal_list:
+            pass
+        else:
+            y.append(word)
+    return (y)
 
 def display_wordcloud(content, sw , title):
     textt = " ".join(review for review in content)
     wordcloud = lb.WordCloud(stopwords=sw).generate(textt)
-    fig , ax = lb.plt.subplots()
+    fig , ax = lb.plt.subplots(figsize=(6,3))
     lb.plt.imshow(wordcloud, interpolation='bilinear')
     lb.plt.axis("off")
     lb.plt.title(title)
